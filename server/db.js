@@ -42,15 +42,16 @@ exports.initialize = function(callback) {
             logger.error(err);
             process.exit(1);
         }
+        db.authenticate('appuser', 'apppass', function(err, result) {
+            logger.log('Connection to Quizzard database successful.');
+            usersCollection = db.collection('users');
+            questionsCollection = db.collection('questions');
+            analyticsCollection = db.collection('analytics');
 
-        logger.log('Connection to Quizzard database successful.');
-        usersCollection = db.collection('users');
-        questionsCollection = db.collection('questions');
-        analyticsCollection = db.collection('analytics');
-
-        getNextQuestionNumber(function() {
-            logger.log(common.formatString('next question number: {0}', [nextQuestionNumber]));
-            return callback();
+            getNextQuestionNumber(function() {
+                logger.log(common.formatString('next question number: {0}', [nextQuestionNumber]));
+                return callback();
+            });
         });
     });
 }
